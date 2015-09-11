@@ -1,0 +1,117 @@
+{
+    "name": "New York",
+    "children": [
+        {
+        "name": "New York City",
+        "children": [
+            {"name": "The Bronx", "population": 1385108},
+            {"name": "Brooklyn", "population": 2504700},
+            {"name": "Queens", "population": 2230722},
+            {"name": "Manhattan", "population": 1585873},
+            {"name": "Staten Island", "population": 468730}
+        ]
+        },
+        {
+        "name": "Long Island",
+        "children": [
+            {"name": "Nassau", "population": 1339532},
+            {"name": "Suffolk", "population": 1493350}
+        ]
+        },
+        {
+        "name": "Hudson Valley",
+        "children": [
+            {"name": "Westchester", "population": 949113},
+            {"name": "Rockland", "population": 311687},
+            {"name": "Putnam", "population": 99710},
+            {"name": "Orange", "population": 372813},
+            {"name": "Dutchess", "population": 297488},
+            {"name": "Sullivan", "population": 77547},
+            {"name": "Ulster", "population": 182493}
+        ]
+        },
+        {
+        "name": "Capital District",
+        "children": [
+            {"name": "Greene", "population": 49221},
+            {"name": "Columbia", "population": 63096},
+            {"name": "Albany", "population": 304204},
+            {"name": "Rensselaer", "population": 159429},
+            {"name": "Schenectady", "population": 154727},
+            {"name": "Saratoga", "population": 219607},
+            {"name": "Washington", "population": 63216},
+            {"name": "Warren", "population": 65707}
+        ]
+        },
+        {
+        "name": "North Country",
+        "children": [
+            {"name": "Essex", "population": 39370},
+            {"name": "Clinton", "population": 82128},
+            {"name": "Franklin", "population": 51599},
+            {"name": "Hamilton", "population": 4836},
+            {"name": "Lewis", "population": 27087},
+            {"name": "Jefferson", "population": 116229},
+            {"name": "St. Lawrence", "population": 111944}
+        ]
+        },
+        {
+        "name": "Mohawk Valley",
+        "children": [
+            {"name": "Fulton", "population": 55531},
+            {"name": "Montgomery", "population": 50219},
+            {"name": "Schoharie", "population": 32749},
+            {"name": "Otsego", "population": 62259},
+            {"name": "Oneida (Utica)", "population": 234878},
+            {"name": "Herkimer", "population": 64519}
+        ]
+        },
+        {
+        "name": "Central New York",
+        "children": [
+            {"name": "Onondaga (Syracuse)", "population": 467026},
+            {"name": "Cayuga", "population": 80026},
+            {"name": "Oswego", "population": 122109},
+            {"name": "Madison", "population": 73442},
+            {"name": "Cortland", "population": 49336}
+        ]
+        },
+        {
+        "name": "Finger Lakes",
+        "children": [
+            {"name": "Seneca", "population": 35251},
+            {"name": "Yates", "population": 25348},
+            {"name": "Ontario", "population": 107931},
+            {"name": "Wayne", "population": 93772},
+            {"name": "Monroe (Rochester)", "population": 744344},
+            {"name": "Livingston", "population": 65393},
+            {"name": "Wyoming", "population": 42155},
+            {"name": "Genesee", "population": 60079},
+            {"name": "Orleans", "population": 42883}
+        ]
+        },
+        {
+        "name": "Western New York",
+        "children": [
+            {"name": "Niagara", "population": 216469},
+            {"name": "Erie (Buffalo)", "population": 919040},
+            {"name": "Chautauqua", "population": 134905},
+            {"name": "Cattaraugus", "population": 80317},
+            {"name": "Allegany", "population": 48946}
+        ]
+        },
+        {
+        "name": "Southern Tier",
+        "children": [
+            {"name": "Broome", "population": 200600},
+            {"name": "Chemung", "population": 88830},
+            {"name": "Chenango", "population": 50477},
+            {"name": "Delaware", "population": 47980},
+            {"name": "Schuyler", "population": 18343},
+            {"name": "Steuben", "population": 98990},
+            {"name": "Tioga", "population": 51125},
+            {"name": "Tompkins", "population": 101564}
+        ]
+        }
+    ]
+}

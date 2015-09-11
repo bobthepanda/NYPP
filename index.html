@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<!-- This is a visualization of New York State's population by County from the
+     2010 Census. Most of this is copy and pasted from the D3 gallery, but
+     hopefully by using and taking apart the code I can learn how to use D3 for
+     data visualizations and learn Javascript. -->
+
+<meta charset="utf-8">
+<style>
+
+body {
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 100%;
+}
+
+form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.node {
+  border: solid 1px white;
+  font: 12px "Source Sans Pro";
+    color: white;
+  line-height: 20px;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 2px;
+}
+
+</style>
+<body></body>
+<!--<form>
+  <label><input type="radio" name="mode" value="population" checked> Population</label>
+  <label><input type="radio" name="mode" value="count"> Count</label>
+</form>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+
+    //These variables store the dimensions of the treemap.
+var margin = {top: 40, right: 10, bottom: 10, left: 10},
+    width = 1080,
+    height = 640;
+
+    //This variable picks a color from a 20-swatch color range specified by d3.
+var color = d3.scale.category20c();
+
+    //This sets up the treemap with appropriate dimensions & attributes.
+var treemap = d3.layout.treemap()
+    .size([width, height])
+    .sticky(true)
+    .value(function(d) { return d.population; });
+
+    //This appends a div of the appropriate size to the DOM for the treemap.
+var div = d3.select("body").append("div")
+    .style("position", "relative")
+    .style("width", (width + margin.left + margin.right) + "px")
+    .style("height", (height + margin.top + margin.bottom) + "px")
+    .style("left", margin.left + "px")
+    .style("top", margin.top + "px");
+
+    //This interprets the population.json data. Unfortunately I had to reformat the
+    //data, as it turns out the Census API gives data in a nonstandard format that
+    //d3.layout.treemap() can't interpret.
+d3.json("population.json", function(error, root) {
+  if (error) throw error;
+
+    //This sets up a node div for every "leaf" in the treemap.
+  var node = div.datum(root).selectAll(".node")
+      .data(treemap.nodes)
+    .enter().append("div")
+      .attr("class", "node")
+      .call(position)
+      .style("background", function(d) { return d.children ? color(d.name) : null; })
+      .text(function(d) { return d.children ? null : d.name; });
+
+    //This takes the input of the form on the website and changes the size of the
+    //nodes accordingly. For some reason removing the form and any associated data
+    //breaks the code.
+    
+    //UPDATE: So it turns out the reason it broke the code was because whoever wrote
+    //this example didn't put in <body> tags in this html file. Whoops.
+    /*
+  d3.selectAll("input").on("change", function change() {
+    var value = this.value === "count"
+        ? function() { return 1; }
+        : function(d) { return d.population; };
+
+    node
+        .data(treemap.value(value).nodes)
+      .transition()
+        .duration(1500)
+        .call(position);
+  });
+  */
+});
+
+    //This calculates the relative position of a node.
+function position() {
+  this.style("left", function(d) { return d.x + "px"; })
+      .style("top", function(d) { return d.y + "px"; })
+      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+}
+
+</script>
