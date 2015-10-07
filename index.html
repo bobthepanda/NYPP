@@ -7,103 +7,210 @@
 
 <meta charset="utf-8">
 <style>
-
-body {
-  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  margin: auto;
-  position: relative;
-  width: 100%;
-}
-
-form {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-.node {
-  border: solid 1px white;
-  font: 12px "Source Sans Pro";
-    color: white;
-  line-height: 20px;
-  overflow: hidden;
-  position: absolute;
-  text-indent: 2px;
-}
-
+    body {
+        font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: auto;
+        position: relative;
+        width: 100%;
+    }
+    
+    .node {
+        border: solid 1px white;
+        font: 12px "Source Sans Pro";
+        color: white;
+        line-height: 20px;
+        overflow: hidden;
+        position: absolute;
+        text-indent: 2px;
+    }
+    
+    div {
+        margin: 10px 10px 10px 10px;
+        justify-content: center;
+        text-align: center;
+    }
 </style>
-<body></body>
-<!--<form>
-  <label><input type="radio" name="mode" value="population" checked> Population</label>
-  <label><input type="radio" name="mode" value="count"> Count</label>
-</form>-->
+
+<body>
+    <div>
+        <div> This is a representation of New York State's population. In this diagram, bigger counties are given space according to their total size.</div>
+        <div id="popTreeMap"></div>
+        <div> As you can see, New York City and its suburbs (in blue tones) make up more than half the population of New York state.
+            <br /> To see the distribution of different racial groups, use the form below.</div>
+        <div>
+            <form>
+                <label>
+                    <input type="radio" name="mode" value="total" checked="true">Total</label>
+                <label>
+                    <input type="radio" name="mode" value="white">White</label>
+                <label>
+                    <input type="radio" name="mode" value="black">Black/African American</label>
+                <label>
+                    <input type="radio" name="mode" value="native">American Indian/Alaska Native</label>
+                <label>
+                    <input type="radio" name="mode" value="asian">Asian</label>
+                <label>
+                    <input type="radio" name="mode" value="mixed">Mixed Race</label>
+                <label>
+                    <input type="radio" name="mode" value="pacific">Native Hawaiian/Other Pacific Islander</label>
+                <label>
+                    <input type="radio" name="mode" value="hispanic">Hispanic</label>
+            </form>
+        </div>
+    </div>
+</body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <script>
-
     //These variables store the dimensions of the treemap.
-var margin = {top: 40, right: 10, bottom: 10, left: 10},
+    var m_left = 10;
+    m_right = 10;
+    m_top = 10;
+    m_bottom = 10;
     width = 1080,
-    height = 640;
+        height = 640;
 
     //This variable picks a color from a 20-swatch color range specified by d3.
-var color = d3.scale.category20c();
+    var color = d3.scale.category20c();
 
     //This sets up the treemap with appropriate dimensions & attributes.
-var treemap = d3.layout.treemap()
-    .size([width, height])
-    .sticky(true)
-    .value(function(d) { return d.population; });
+    var treemap = d3.layout.treemap()
+        .size([width, height])
+        .sticky(true)
+        .value(function (d) {
+            return d.population;
+        });
 
     //This appends a div of the appropriate size to the DOM for the treemap.
-var div = d3.select("body").append("div")
-    .style("position", "relative")
-    .style("width", (width + margin.left + margin.right) + "px")
-    .style("height", (height + margin.top + margin.bottom) + "px")
-    .style("left", margin.left + "px")
-    .style("top", margin.top + "px");
+    var div = d3.select("#popTreeMap")
+        .style("margin", "0 auto")
+        .style("position", "relative")
+        .style("width", (width + m_left + m_right) + "px")
+        .style("height", (height + m_top + m_bottom) + "px")
+        .style("left", m_left + "px")
+        .style("top", m_top + "px");
 
     //This interprets the population.json data. Unfortunately I had to reformat the
     //data, as it turns out the Census API gives data in a nonstandard format that
     //d3.layout.treemap() can't interpret.
-d3.json("population.json", function(error, root) {
-  if (error) throw error;
+    d3.json("population.json", function (error, root) {
+        if (error) throw error;
 
-    //This sets up a node div for every "leaf" in the treemap.
-  var node = div.datum(root).selectAll(".node")
-      .data(treemap.nodes)
-    .enter().append("div")
-      .attr("class", "node")
-      .call(position)
-      .style("background", function(d) { return d.children ? color(d.name) : null; })
-      .text(function(d) { return d.children ? null : d.name; });
+        //This sets up a node div for every "leaf" in the treemap.
+        var popNode = div.datum(root).selectAll(".node")
+            .data(treemap.nodes)
+            .enter().append("div")
+            .attr("class", "node")
+            .call(position)
+            .style("background", function (d) {
+                return d.children ? color(d.name) : null;
+            })
+            .text(function (d) {
+                return d.children ? null : d.name;
+            });
 
-    //This takes the input of the form on the website and changes the size of the
-    //nodes accordingly. For some reason removing the form and any associated data
-    //breaks the code.
-    
-    //UPDATE: So it turns out the reason it broke the code was because whoever wrote
-    //this example didn't put in <body> tags in this html file. Whoops.
-    /*
-  d3.selectAll("input").on("change", function change() {
-    var value = this.value === "count"
-        ? function() { return 1; }
-        : function(d) { return d.population; };
+        //This takes the input of the form on the website and changes the size of the
+        //nodes accordingly. For some reason removing the form and any associated data
+        //breaks the code.
 
-    node
-        .data(treemap.value(value).nodes)
-      .transition()
-        .duration(1500)
-        .call(position);
-  });
-  */
-});
+        //UPDATE: So it turns out the reason it broke the code was because whoever wrote
+        //this example didn't put in <body> tags in this html file. Whoops.
+
+        d3.selectAll("input").on("change", function change() {
+            var value;
+            if (this.value === "white") {
+                value = function(d) {
+                    return d.population * d.white;
+                }
+            }
+            else if (this.value === "black") {
+                value = function(d) {
+                    return d.population * d.black;
+                }
+            }
+            else if (this.value === "native") {
+                value = function(d) {
+                    return d.population * d.native;
+                }
+            }
+            else if (this.value === "asian") {
+                value = function(d) {
+                    return d.population * d.asian;
+                }
+            }
+            else if (this.value === "hispanic") {
+                value = function(d) {
+                    return d.population * d.hispanic;
+                }
+            }
+            else if (this.value === "mixed") {
+                value = function(d) {
+                    return d.population * d.mixed;
+                }
+            }
+            else if (this.value === "pacific") {
+                value = function(d) {
+                    return d.population * d.pacific;
+                }
+            }
+            else {
+                value = function(d) {
+                    return d.population;
+                }
+            }
+            /*= this.value === "white" ? function (d) {
+                console.log(value);
+                return d.population * d.white;
+            } : function (d) {
+                value = this.value === "black" ? function (d) {
+                    console.log(value);
+                    return d.population * d.black;
+                } : function (d) {
+                    value = this.value === "native" ? function (d) {
+                        return d.population * d.native;
+                    } : function (d) {
+                        value = this.value === "asian" ? function (d) {
+                            return d.population * d.asian;
+                        } : function (d) {
+                            value = this.value === "pacific" ? function (d) {
+                                return d.population * d.pacific;
+                            } : function (d) {
+                                value = this.value === "mixed" ? function (d) {
+                                    return d.population * d.mixed;
+                                } : function (d) {
+                                    value = this.value === "hispanic" ? function (d) {
+                                        return d.population * d.hispanic;
+                                    } : function (d) {
+                                        return d.population;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };*/
+
+            popNode
+                .data(treemap.value(value).nodes)
+                .transition()
+                .duration(1500)
+                .call(position);
+        });
+
+    });
 
     //This calculates the relative position of a node.
-function position() {
-  this.style("left", function(d) { return d.x + "px"; })
-      .style("top", function(d) { return d.y + "px"; })
-      .style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
-      .style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
-}
-
+    function position() {
+        this.style("left", function (d) {
+                return d.x + "px";
+            })
+            .style("top", function (d) {
+                return d.y + "px";
+            })
+            .style("width", function (d) {
+                return Math.max(0, d.dx - 1) + "px";
+            })
+            .style("height", function (d) {
+                return Math.max(0, d.dy - 1) + "px";
+            });
+    }
 </script>
